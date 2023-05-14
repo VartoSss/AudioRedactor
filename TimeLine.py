@@ -1,31 +1,51 @@
 from Fragment import Fragment
-
+from typing import TypeVar
+from pydub import AudioSegment
 
 class TimeLine:
     def __init__(self):
         self.head = None
         self.tail = None
+        self.names_to_id = dict()
+        self.count = 0
 
-    def add(self, value: Fragment):
-        new_node = LinkedListNode(value)
+    def add(self, fragment: Fragment):
+        self.names_to_id[fragment.name] = fragment.id
+        self.count += 1
         if self.head is None:
-            self.head = new_node
-            self.tail = new_node
+            self.head = fragment
+            self.tail = fragment
 
         else:
-            new_node.previous = self.tail
-            self.tail.next = new_node
-            self.tail = new_node
+            fragment.previous = self.tail
+            self.tail.next = fragment
+            self.tail = fragment
 
     def remove_node_by_id(self, id):
         node = self.get_node_by_id(id)
         self.remove_node(node)
 
-    def remove_node(self, node):
-        next_node = node.next
-        previous_node = node.previous
-        previous_node.next = next_node
-        next_node.previous = previous_node
+    def remove_node(self, node : Fragment):
+        if self.count == 0:
+            raise TypeError
+        elif self.count == 1:
+            self.head = self.tail = None
+
+        elif node.previous is None:
+            self.head = node.next
+            self.head.previous = None
+
+        elif node.next is None:
+            self.tail = node.previous
+            self.tail.next = None
+
+        else:
+            next_node = node.next
+            previous_node = node.previous
+            previous_node.next = next_node
+            next_node.previous = previous_node
+
+        self.count -= 1
 
     def get_value_by_id(self, id):
         return self.get_node_by_id(id).value
@@ -41,15 +61,14 @@ class TimeLine:
         if node.next is None:
             raise TypeError
         next = node.next
-        node_value = node.value
-        node_value.cuncat_with(next.value)
+        node.cuncat_with(next)
         self.remove_node(next)
 
-
-class LinkedListNode:
-    def __init__(self, value: Fragment):
-        self.value = value
-        self.next = None
-        self.previous = None
-        self.id = Fragment.id
-        Fragment.id += 1
+    def render(self, path_with_name: str, format_file: str) -> AudioSegment:
+        final_segment = self.head
+        current_segment = self.head
+        while(current_segment.next is not None):
+            current_segment = current_segment.next
+            final_segment.cuncat_with(current_segment)
+        final_segment.export_fragment(path_with_name, format_file)
+        
