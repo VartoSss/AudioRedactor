@@ -8,6 +8,7 @@ class TimeLine:
         self.tail = None
         self.names_to_id = dict()
         self.count = 0
+        self.comand_stack = []
 
     def add(self, fragment: Fragment):
         self.names_to_id[fragment.name] = fragment.id
