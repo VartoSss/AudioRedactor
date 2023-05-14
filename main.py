@@ -10,5 +10,10 @@ timeLine.add(morgen_fragment)
 shit = Fragment("sample-15s.wav")
 timeLine.add(shit)
 
-timeLine.render("final.mp3", "mp3")
+timeLine.change_speed(1, 1.5)
 
+timeLine.render("speeded_up.mp3", "mp3")
+
+timeLine.undo()
+
+timeLine.render("undo.mp3", "mp3")

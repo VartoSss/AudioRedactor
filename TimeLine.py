@@ -1,6 +1,8 @@
 from Fragment import Fragment
 from typing import TypeVar
 from pydub import AudioSegment
+from ChangeSpeedComand import ChangeSpeedComand
+
 
 class TimeLine:
     def __init__(self):
@@ -26,7 +28,7 @@ class TimeLine:
         node = self.get_node_by_id(id)
         self.remove_node(node)
 
-    def remove_node(self, node : Fragment):
+    def remove_node(self, node: Fragment):
         if self.count == 0:
             raise TypeError
         elif self.count == 1:
@@ -50,6 +52,9 @@ class TimeLine:
 
     def get_value_by_id(self, id):
         return self.get_node_by_id(id).value
+    
+    def set_value_by_id(self, id, new_value):
+        self.get_node_by_id(id).value = new_value
 
     def get_node_by_id(self, id):
         current_node = self.head
@@ -68,8 +73,16 @@ class TimeLine:
     def render(self, path_with_name: str, format_file: str) -> AudioSegment:
         final_segment = self.head
         current_segment = self.head
-        while(current_segment.next is not None):
+        while (current_segment.next is not None):
             current_segment = current_segment.next
             final_segment.cuncat_with(current_segment)
         final_segment.export_fragment(path_with_name, format_file)
-        
+
+    def change_speed(self, id: int, speed_multiplier: float):
+        change_speed_command = ChangeSpeedComand(self, id, speed_multiplier)
+        self.comand_stack.append(change_speed_command)
+        change_speed_command.Execute()
+
+    def undo(self):
+        command = self.comand_stack.pop()
+        command.Undo()
