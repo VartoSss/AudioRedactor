@@ -1,7 +1,8 @@
 from Fragment import Fragment
 from typing import TypeVar
 from pydub import AudioSegment
-from ChangeSpeedComand import ChangeSpeedComand
+from ChangeSpeedCommand import ChangeSpeedComand
+from ChangeVolumeCommand import ChangeVolumeComand
 
 
 class TimeLine:
@@ -10,7 +11,7 @@ class TimeLine:
         self.tail = None
         self.names_to_id = dict()
         self.count = 0
-        self.comand_stack = []
+        self.command_stack = []
 
     def add(self, fragment: Fragment):
         self.names_to_id[fragment.name] = fragment.id
@@ -80,9 +81,14 @@ class TimeLine:
 
     def change_speed(self, id: int, speed_multiplier: float):
         change_speed_command = ChangeSpeedComand(self, id, speed_multiplier)
-        self.comand_stack.append(change_speed_command)
+        self.command_stack.append(change_speed_command)
         change_speed_command.Execute()
 
+    def change_volume(self, id: int, volume_delta_decibels : int):
+        change_volume_command = ChangeVolumeComand(self, id, volume_delta_decibels)
+        self.command_stack.append(change_volume_command)
+        change_volume_command.Execute()
+
     def undo(self):
-        command = self.comand_stack.pop()
+        command = self.command_stack.pop()
         command.Undo()

@@ -11,9 +11,11 @@ shit = Fragment("sample-15s.wav")
 timeLine.add(shit)
 
 timeLine.change_speed(1, 1.5)
+timeLine.change_volume(1, 15)
 
 timeLine.render("speeded_up.mp3", "mp3")
 
+timeLine.undo()
 timeLine.undo()
 
 timeLine.render("undo.mp3", "mp3")
