@@ -3,7 +3,8 @@ from typing import TypeVar
 from pydub import AudioSegment
 from ChangeSpeedCommand import ChangeSpeedComand
 from ChangeVolumeCommand import ChangeVolumeComand
-from FadeOutCommand import FadeOutComand
+from FadeOutCommand import FadeOutCommand
+from FadeInCommand import FadeInCommand
 
 
 class TimeLine:
@@ -54,7 +55,7 @@ class TimeLine:
 
     def get_value_by_id(self, id):
         return self.get_node_by_id(id).value
-    
+
     def set_value_by_id(self, id, new_value):
         self.get_node_by_id(id).value = new_value
 
@@ -85,15 +86,21 @@ class TimeLine:
         self.command_stack.append(change_speed_command)
         change_speed_command.Execute()
 
-    def change_volume(self, id: int, volume_delta_decibels : int):
-        change_volume_command = ChangeVolumeComand(self, id, volume_delta_decibels)
+    def change_volume(self, id: int, volume_delta_decibels: int):
+        change_volume_command = ChangeVolumeComand(
+            self, id, volume_delta_decibels)
         self.command_stack.append(change_volume_command)
         change_volume_command.Execute()
 
-    def fade_out(self, id : int, duration_miliseconds):
-        fade_out_command = FadeOutComand(self, id, duration_miliseconds)
+    def fade_out(self, id: int, duration_miliseconds):
+        fade_out_command = FadeOutCommand(self, id, duration_miliseconds)
         self.command_stack.append(fade_out_command)
         fade_out_command.Execute()
+
+    def fade_in(self, id: int, duration_miliseconds):
+        fade_in_command = FadeInCommand(self, id, duration_miliseconds)
+        self.command_stack.append(fade_in_command)
+        fade_in_command.Execute()
 
     def undo(self):
         command = self.command_stack.pop()
