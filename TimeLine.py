@@ -3,6 +3,7 @@ from typing import TypeVar
 from pydub import AudioSegment
 from ChangeSpeedCommand import ChangeSpeedComand
 from ChangeVolumeCommand import ChangeVolumeComand
+from FadeOutCommand import FadeOutComand
 
 
 class TimeLine:
@@ -88,6 +89,11 @@ class TimeLine:
         change_volume_command = ChangeVolumeComand(self, id, volume_delta_decibels)
         self.command_stack.append(change_volume_command)
         change_volume_command.Execute()
+
+    def fade_out(self, id : int, duration_miliseconds):
+        fade_out_command = FadeOutComand(self, id, duration_miliseconds)
+        self.command_stack.append(fade_out_command)
+        fade_out_command.Execute()
 
     def undo(self):
         command = self.command_stack.pop()
