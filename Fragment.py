@@ -6,6 +6,8 @@ Fragment = TypeVar('Fragment', bound='Fragment')
 
 
 class Fragment:
+    id = 0
+    
     def __init__(self, path_to_audio: str) -> None:
         self.set_fragment_by_path(path_to_audio)
         self.set_name_by_path(path_to_audio)

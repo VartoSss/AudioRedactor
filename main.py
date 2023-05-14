@@ -1,5 +1,8 @@
 import pydub
 
+from pydub.playback import play
+
+
 def slice_audio(audio, from_miliseconds, to_miliseconds):
     slised_song = audio[from_miliseconds:to_miliseconds]
     return slised_song
@@ -14,6 +17,7 @@ def speed_change(audio, speed=1.0):
 
 def change_volume(audio, volume_delta_decibels):
     return audio + volume_delta_decibels
+
 
 def cuncat_audio(first_audio, second_audio):
     return first_audio + second_audio
@@ -53,3 +57,4 @@ second_double_speed = speed_change(sliced_second, 2)
 cuncated = cuncat_audio(sliced_audio, second_double_speed)
 
 cuncated.export("cool_morgen.mp3", format="mp3")
+play(cuncated)
