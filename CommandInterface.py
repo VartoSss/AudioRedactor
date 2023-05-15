@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
 
+
 class CommandInterface(ABC):
     @abstractmethod
-    def Execute():
+    def execute():
         pass
 
     @abstractmethod
-    def Undo():
+    def undo():
         pass

@@ -7,12 +7,12 @@ class FadeOutCommand(CommandInterface):
         self.id = id
         self.duration_miliseconds = duration_miliseconds
 
-    def Execute(self):
+    def execute(self):
         value_before = self.timeLine.get_value_by_id(self.id)
         value_after = value_before.fade_out(self.duration_miliseconds)
         self.timeLine.set_value_by_id(self.id, value_after)
 
-    def Undo(self):
+    def undo(self):
         value_before = self.timeLine.get_value_by_id(self.id)
         value_after = value_before.fade_in(self.duration_miliseconds)
         self.timeLine.set_value_by_id(self.id, value_after)

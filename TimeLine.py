@@ -5,6 +5,7 @@ from ChangeSpeedCommand import ChangeSpeedComand
 from ChangeVolumeCommand import ChangeVolumeComand
 from FadeOutCommand import FadeOutCommand
 from FadeInCommand import FadeInCommand
+from AddCommand import AddCommand
 
 
 class TimeLine:
@@ -16,16 +17,9 @@ class TimeLine:
         self.command_stack = []
 
     def add(self, fragment: Fragment):
-        self.names_to_id[fragment.name] = fragment.id
-        self.count += 1
-        if self.head is None:
-            self.head = fragment
-            self.tail = fragment
-
-        else:
-            fragment.previous = self.tail
-            self.tail.next = fragment
-            self.tail = fragment
+        add_command = AddCommand(self, fragment)
+        self.command_stack.append(add_command)
+        add_command.execute()
 
     def remove_node_by_id(self, id):
         node = self.get_node_by_id(id)
@@ -84,24 +78,24 @@ class TimeLine:
     def change_speed(self, id: int, speed_multiplier: float):
         change_speed_command = ChangeSpeedComand(self, id, speed_multiplier)
         self.command_stack.append(change_speed_command)
-        change_speed_command.Execute()
+        change_speed_command.execute()
 
     def change_volume(self, id: int, volume_delta_decibels: int):
         change_volume_command = ChangeVolumeComand(
             self, id, volume_delta_decibels)
         self.command_stack.append(change_volume_command)
-        change_volume_command.Execute()
+        change_volume_command.execute()
 
     def fade_out(self, id: int, duration_miliseconds):
         fade_out_command = FadeOutCommand(self, id, duration_miliseconds)
         self.command_stack.append(fade_out_command)
-        fade_out_command.Execute()
+        fade_out_command.execute()
 
     def fade_in(self, id: int, duration_miliseconds):
         fade_in_command = FadeInCommand(self, id, duration_miliseconds)
         self.command_stack.append(fade_in_command)
-        fade_in_command.Execute()
+        fade_in_command.execute()
 
     def undo(self):
         command = self.command_stack.pop()
-        command.Undo()
+        command.undo()
