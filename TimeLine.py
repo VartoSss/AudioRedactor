@@ -6,13 +6,14 @@ from ChangeVolumeCommand import ChangeVolumeComand
 from FadeOutCommand import FadeOutCommand
 from FadeInCommand import FadeInCommand
 from AddCommand import AddCommand
+from RemoveCommand import RemoveCommand
 
 
 class TimeLine:
     def __init__(self):
         self.head = None
         self.tail = None
-        self.names_to_id = dict()
+        self.id_to_names = dict()
         self.count = 0
         self.command_stack = []
 
@@ -67,8 +68,10 @@ class TimeLine:
         node.cuncat_with(next)
         self.remove_node(next)
 
-    def render(self, path_with_name: str, format_file: str) -> AudioSegment:
-        final_segment = self.head
+    def render(self, path_with_name: str, format_file: str):
+        if (self.count == 0):
+            raise TypeError("There is nothing on timeLine now")
+        final_segment = self.head.copy()
         current_segment = self.head
         while (current_segment.next is not None):
             current_segment = current_segment.next
@@ -95,6 +98,11 @@ class TimeLine:
         fade_in_command = FadeInCommand(self, id, duration_miliseconds)
         self.command_stack.append(fade_in_command)
         fade_in_command.execute()
+
+    def remove(self, id: int):
+        remove_command = RemoveCommand(self, id)
+        self.command_stack.append(remove_command)
+        remove_command.execute()
 
     def undo(self):
         command = self.command_stack.pop()

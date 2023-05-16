@@ -8,7 +8,7 @@ class AddCommand(CommandInterface):
         self.fragment = fragment
 
     def execute(self):
-        self.timeline.names_to_id[self.fragment.name] = self.fragment.id
+        self.timeline.id_to_names[self.fragment.id] = self.fragment.name
         self.timeline.count += 1
         if self.timeline.head is None:
             self.timeline.head = self.fragment
