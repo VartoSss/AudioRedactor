@@ -1,14 +1,18 @@
-import pydub
 from Fragment import Fragment
 from TimeLine import TimeLine
 from pydub import AudioSegment
 
 timeLine = TimeLine()
-morgen1 = Fragment("MORGENSHTERN_-_DULO_72947606.mp3")
+morgen = Fragment("MORGENSHTERN_-_DULO_72947606.mp3")
 
-timeLine.add(morgen1)
+timeLine.add(morgen)
 
-timeLine.crop(1, 10000, 20000)
+timeLine.slice(1, 10000)
+
+timeLine.remove(3)
+
+timeLine.undo()
 timeLine.undo()
 
-timeLine.render("crop.mp3", "mp3")
+timeLine.render("ahahah.mp3", "mp3")
+

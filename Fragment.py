@@ -18,6 +18,24 @@ class Fragment:
         self.previous = None
         Fragment.__last_id += 1
 
+    def __init__(self, path_to_audio, name=None, value=None, previous=None, next=None):
+        if name is None:
+            self.path_to_audio = path_to_audio
+            self.set_value_by_path(path_to_audio)
+            self.set_name_by_path(path_to_audio)
+            self.id = self.__last_id
+            self.next = None
+            self.previous = None
+        else:
+            self.name = name
+            self.value = value
+            self.path_to_audio = path_to_audio
+            self.previous = previous
+            self.next = next
+            self.id = self.__last_id
+        Fragment.__last_id += 1
+
+
     def set_value_by_path(self, path_to_audio: str):
         if (path_to_audio.endswith(".wav")):
             self.value = pydub.AudioSegment.from_wav(path_to_audio)
