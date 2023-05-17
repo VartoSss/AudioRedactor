@@ -7,6 +7,7 @@ from FadeOutCommand import FadeOutCommand
 from FadeInCommand import FadeInCommand
 from AddCommand import AddCommand
 from RemoveCommand import RemoveCommand
+from CropCommand import CropCommand
 
 
 class TimeLine:
@@ -104,6 +105,11 @@ class TimeLine:
         remove_command = RemoveCommand(self, id)
         self.command_stack.append(remove_command)
         remove_command.execute()
+
+    def crop(self, id, from_miliseconds, to_miliseconds):
+        crop_command = CropCommand(self, id, from_miliseconds, to_miliseconds)
+        self.command_stack.append(crop_command)
+        crop_command.execute()
 
     def undo(self):
         command = self.command_stack.pop()

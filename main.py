@@ -8,6 +8,7 @@ morgen1 = Fragment("MORGENSHTERN_-_DULO_72947606.mp3")
 
 timeLine.add(morgen1)
 
-timeLine.change_speed(1, 2)
+timeLine.crop(1, 10000, 20000)
+timeLine.undo()
 
-timeLine.render("sutl.mp3", "mp3")
+timeLine.render("crop.mp3", "mp3")
