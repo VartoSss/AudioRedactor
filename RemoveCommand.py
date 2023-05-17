@@ -1,7 +1,6 @@
 from CommandInterface import CommandInterface
 from Fragment import Fragment
 
-
 class RemoveCommand(CommandInterface):
     def __init__(self, timeline, id: int):
         self.timeline = timeline
@@ -21,7 +20,7 @@ class RemoveCommand(CommandInterface):
             self.timeline.head = self.timeline.tail = self.fragment
             self.timeline.count += 1
             return
-        
+
         elif self.previous_id is None:
             self.timeline.head.previous = self.fragment
             self.timeline.head = self.timeline.head.previous

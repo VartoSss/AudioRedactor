@@ -52,7 +52,8 @@ class TimeLine:
         return self.get_node_by_id(id).value
 
     def set_value_by_id(self, id, new_value):
-        self.get_node_by_id(id).value = new_value
+        node = self.get_node_by_id(id)
+        node.value = new_value
 
     def get_node_by_id(self, id):
         current_node = self.head
@@ -63,7 +64,7 @@ class TimeLine:
     def cuncat_audio_with_next_by_id(self, id):
         node = self.get_node_by_id(id)
         if node.next is None:
-            raise TypeError
+            raise TypeError("This track doesn't have a track after him")
         next = node.next
         node.cuncat_with(next)
         self.remove_node(next)
@@ -71,12 +72,12 @@ class TimeLine:
     def render(self, path_with_name: str, format_file: str):
         if (self.count == 0):
             raise TypeError("There is nothing on timeLine now")
-        final_segment = self.head.copy()
+        final_segment_value = self.head.copy_value()
         current_segment = self.head
         while (current_segment.next is not None):
             current_segment = current_segment.next
-            final_segment.cuncat_with(current_segment)
-        final_segment.export_fragment(path_with_name, format_file)
+            final_segment_value += current_segment.value
+        final_segment_value.export(path_with_name, format_file)
 
     def change_speed(self, id: int, speed_multiplier: float):
         change_speed_command = ChangeSpeedComand(self, id, speed_multiplier)

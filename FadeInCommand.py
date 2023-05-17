@@ -1,6 +1,5 @@
 from CommandInterface import CommandInterface
 
-
 class FadeInCommand(CommandInterface):
     def __init__(self, timeLine, id: int, duration_miliseconds: int):
         self.timeLine = timeLine

@@ -10,7 +10,8 @@ class ChangeVolumeComand(CommandInterface):
 
     def execute(self):
         value_before = self.timeLine.get_value_by_id(self.id)
-        value_after = value_before + self.volume_delta_decibels
+        value_after = value_before.apply_gain(self.volume_delta_decibels)
+        a = value_after == value_before
         self.timeLine.set_value_by_id(self.id, value_after)
         self.previous_value = value_before
 

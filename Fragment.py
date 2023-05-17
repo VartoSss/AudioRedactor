@@ -1,6 +1,7 @@
 import pydub
 import os
 from typing import TypeVar
+from copy import deepcopy
 
 Fragment = TypeVar('Fragment', bound='Fragment')
 
@@ -52,9 +53,9 @@ class Fragment:
     def fade_in(self, duration_miliseconds):
         self.value = self.value.fade_in(duration_miliseconds)
 
-    def copy(self):
-        new_fragment = Fragment(self.path_to_audio)
-        return new_fragment
+    def copy_value(self):
+        new_value = deepcopy(self.value)
+        return new_value
 
     def export_fragment(self, path_with_name: str, format_file: str) -> None:
         self.value.export(path_with_name, format=format_file)
