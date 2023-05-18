@@ -12,10 +12,13 @@ timeLine.add(golden_fishes)
 timeLine.add(without_you)
 timeLine.add(meteor_rain)
 
-timeLine.crop(1, 28000, 58000)
+timeLine.crop(1, 38000, 48000)
 timeLine.crop(2, 32500, 45000)
-timeLine.crop(3, 58000, 110000)
-timeLine.crop(4, 53000, 78000)
+timeLine.crop(3, 78000, 88000)
+timeLine.crop(4, 53000, 63000)
+
+timeLine.reverse(2)
+timeLine.change_speed(3, 0.75)
 
 timeLine.fade_out(1, 3000)
 timeLine.fade_in(2, 3000)
@@ -24,4 +27,19 @@ timeLine.fade_in(3, 3000)
 timeLine.fade_out(3, 3000)
 timeLine.fade_in(4, 3000)
 
-timeLine.render("LSP1Love.mp3", "mp3")
+
+timeLine.render("LSPtracks.mp3", "mp3")
+
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+timeLine.undo()
+
+timeLine.render("LSPUndid.mp3", "mp3")

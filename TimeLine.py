@@ -9,6 +9,7 @@ from AddCommand import AddCommand
 from RemoveCommand import RemoveCommand
 from CropCommand import CropCommand
 from SliceCommand import SliceCommand
+from ReverseCommand import ReverseCommand
 
 
 class TimeLine:
@@ -116,6 +117,11 @@ class TimeLine:
         slice_command = SliceCommand(self, id, where_to_cut_miliseconds)
         self.command_stack.append(slice_command)
         slice_command.execute()
+
+    def reverse(self, id):
+        reverse_command = ReverseCommand(self, id)
+        self.command_stack.append(reverse_command)
+        reverse_command.execute()
 
     def undo(self):
         command = self.command_stack.pop()
