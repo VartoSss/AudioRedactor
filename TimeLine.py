@@ -72,7 +72,7 @@ class TimeLine:
         node.cuncat_with(next)
         self.remove_node(next)
 
-    def render(self, path_with_name: str, format_file: str):
+    def export(self, path_with_name: str, format_file: str):
         if (self.count == 0):
             raise TypeError("There is nothing on timeLine now")
         final_segment_value = self.head.copy_value()
