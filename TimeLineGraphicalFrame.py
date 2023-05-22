@@ -11,6 +11,7 @@ class TimeLineGraphicalFrame:
         # создаем фрейм на канвасе
         self.frame = Frame(canvas, bd=2)
         self.frame.configure(bg="#B4FFF6")
+        self.frame.pack(side='left', fill='both', expand=True)
         canvas.create_window((0, 0), window=self.frame, anchor='nw')
 
         # настраиваем скроллбар
@@ -24,9 +25,16 @@ class TimeLineGraphicalFrame:
 
         self.frame.bind('<Configure>', on_frame_configure)
 
-    def update(self, new_fragment):
+    def update(self):
         for child in self.frame.winfo_children():
             child.destroy()
 
-        for _ in range(self.timeLine.count):
-            ButtonTimeLine(self, new_fragment)
+        current = self.timeLine.head
+        if current == self.timeLine.tail:
+            ButtonTimeLine(self, current)
+            return
+
+        while (current.next is not None):
+            ButtonTimeLine(self, current)
+            current = current.next
+        ButtonTimeLine(self, current)

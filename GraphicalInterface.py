@@ -73,6 +73,67 @@ class GraphicalInterface:
         self.functions_frame.pack_propagate(False)
         self.functions_frame.configure(width=600, height=150)
         self.functions_frame.pack(side=TOP)
+        change_speed_button = Button(
+            self.functions_frame,
+            text="Изменить скорость",
+            font=self.hat_font,
+        )
+        change_speed_button.grid(row=0, column=0, sticky=NSEW, padx=5, pady=5)
+        change_volume_button = Button(
+            self.functions_frame,
+            text="Изменить громкость",
+            font=self.hat_font,
+        )
+        change_volume_button.grid(row=1, column=0, sticky=NSEW, padx=5, pady=5)
+
+        reverse_button = Button(
+            self.functions_frame,
+            text="Развернуть",
+            font=self.hat_font,
+        )
+        reverse_button.grid(row=2, column=0, sticky=NSEW, padx=5, pady=5)
+
+        crop_button = Button(
+            self.functions_frame,
+            text="Обрезать",
+            font=self.hat_font,
+        )
+        crop_button.grid(row=0, column=1, sticky=NSEW, padx=5, pady=5)
+
+        slice_button = Button(
+            self.functions_frame,
+            text="Разрезать",
+            font=self.hat_font,
+        )
+        slice_button.grid(row=1, column=1, sticky=NSEW, padx=5, pady=5)
+
+        cuncat_button = Button(
+            self.functions_frame,
+            text="Обьеденить с следующим",
+            font=self.hat_font,
+        )
+        cuncat_button.grid(row=2, column=1, sticky=NSEW, padx=5, pady=5)
+
+        fade_in_button = Button(
+            self.functions_frame,
+            text="Fade in",
+            font=self.hat_font,
+        )
+        fade_in_button.grid(row=0, column=2, sticky=NSEW, padx=5, pady=5)
+
+        fade_out_button = Button(
+            self.functions_frame,
+            text="Fade out",
+            font=self.hat_font,
+        )
+        fade_out_button.grid(row=1, column=2, sticky=NSEW, padx=5, pady=5)
+
+        remove_button = Button(
+            self.functions_frame,
+            text="Удалить фрагмент",
+            font=self.hat_font,
+        )
+        remove_button.grid(row=2, column=2, sticky=NSEW, padx=5, pady=5)
 
         # Настройка Таймлайна
         self.timeLineGraphics = TimeLineGraphicalFrame(
@@ -86,6 +147,7 @@ class GraphicalInterface:
                 "Пока не происходило никаких действий, отменять нечего")
             return
         self.timeLine.undo()
+        self.timeLineGraphics.update()
 
     def save_command(self):
         print("This button doesn't work yet")
@@ -99,7 +161,7 @@ class GraphicalInterface:
                 "Можно добавлять только файлы с расширением .mp3 или .wav")
         new_fragment = Fragment(path_to_audio)
         self.timeLine.add(new_fragment)
-        self.timeLineGraphics.update(new_fragment)
+        self.timeLineGraphics.update()
 
     def export_command(self):
         if self.timeLine.count == 0:

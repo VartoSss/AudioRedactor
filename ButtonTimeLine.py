@@ -20,3 +20,6 @@ class ButtonTimeLine:
             width=140
         )
         button.pack(side='left')
+
+    def on_click(self):
+        pass
