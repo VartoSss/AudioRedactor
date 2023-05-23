@@ -73,71 +73,82 @@ class GraphicalInterface:
         self.functions_frame.pack_propagate(False)
         self.functions_frame.configure(width=600, height=150)
         self.functions_frame.pack(side=TOP)
-        change_speed_button = Button(
+        self.change_speed_button = Button(
             self.functions_frame,
             text="Изменить скорость",
             font=self.hat_font,
+            state='disabled'
         )
-        change_speed_button.grid(row=0, column=0, sticky=NSEW, padx=5, pady=5)
-        change_volume_button = Button(
+        self.change_speed_button.grid(
+            row=0, column=0, sticky=NSEW, padx=5, pady=5)
+        self.change_volume_button = Button(
             self.functions_frame,
             text="Изменить громкость",
             font=self.hat_font,
+            state='disabled'
         )
-        change_volume_button.grid(row=1, column=0, sticky=NSEW, padx=5, pady=5)
+        self.change_volume_button.grid(
+            row=1, column=0, sticky=NSEW, padx=5, pady=5)
 
-        reverse_button = Button(
+        self.reverse_button = Button(
             self.functions_frame,
             text="Развернуть",
             font=self.hat_font,
+            state='disabled'
         )
-        reverse_button.grid(row=2, column=0, sticky=NSEW, padx=5, pady=5)
+        self.reverse_button.grid(row=2, column=0, sticky=NSEW, padx=5, pady=5)
 
-        crop_button = Button(
+        self.crop_button = Button(
             self.functions_frame,
             text="Обрезать",
             font=self.hat_font,
+            state='disabled'
         )
-        crop_button.grid(row=0, column=1, sticky=NSEW, padx=5, pady=5)
+        self.crop_button.grid(row=0, column=1, sticky=NSEW, padx=5, pady=5)
 
-        slice_button = Button(
+        self.slice_button = Button(
             self.functions_frame,
             text="Разрезать",
             font=self.hat_font,
+            state='disabled'
         )
-        slice_button.grid(row=1, column=1, sticky=NSEW, padx=5, pady=5)
+        self.slice_button.grid(row=1, column=1, sticky=NSEW, padx=5, pady=5)
 
-        cuncat_button = Button(
+        self.cuncat_button = Button(
             self.functions_frame,
             text="Обьеденить с следующим",
             font=self.hat_font,
+            state='disabled'
         )
-        cuncat_button.grid(row=2, column=1, sticky=NSEW, padx=5, pady=5)
+        self.cuncat_button.grid(row=2, column=1, sticky=NSEW, padx=5, pady=5)
 
-        fade_in_button = Button(
+        self.fade_in_button = Button(
             self.functions_frame,
             text="Fade in",
             font=self.hat_font,
+            state='disabled'
         )
-        fade_in_button.grid(row=0, column=2, sticky=NSEW, padx=5, pady=5)
+        self.fade_in_button.grid(row=0, column=2, sticky=NSEW, padx=5, pady=5)
 
-        fade_out_button = Button(
+        self.fade_out_button = Button(
             self.functions_frame,
             text="Fade out",
             font=self.hat_font,
+            state='disabled'
         )
-        fade_out_button.grid(row=1, column=2, sticky=NSEW, padx=5, pady=5)
+        self.fade_out_button.grid(row=1, column=2, sticky=NSEW, padx=5, pady=5)
 
-        remove_button = Button(
+        self.remove_button = Button(
             self.functions_frame,
             text="Удалить фрагмент",
             font=self.hat_font,
+            state='disabled'
         )
-        remove_button.grid(row=2, column=2, sticky=NSEW, padx=5, pady=5)
+        self.remove_button.grid(row=2, column=2, sticky=NSEW, padx=5, pady=5)
 
         # Настройка Таймлайна
         self.timeLineGraphics = TimeLineGraphicalFrame(
-            self.window, self.timeLine)
+            self, self.timeLine)
 
         pass
 
@@ -159,6 +170,8 @@ class GraphicalInterface:
         if not (path_to_audio.endswith(".mp3") or path_to_audio.endswith('.wav')):
             self.create_warning_window(
                 "Можно добавлять только файлы с расширением .mp3 или .wav")
+            return
+
         new_fragment = Fragment(path_to_audio)
         self.timeLine.add(new_fragment)
         self.timeLineGraphics.update()

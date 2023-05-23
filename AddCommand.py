@@ -20,6 +20,7 @@ class AddCommand(CommandInterface):
             self.timeline.tail = self.fragment
 
     def undo(self):
+        self.timeline.count -= 1
         if self.timeline.tail.previous is None:
             self.timeline.head = self.timeline.tail = None
             return

@@ -3,9 +3,10 @@ from ButtonTimeLine import ButtonTimeLine
 
 
 class TimeLineGraphicalFrame:
-    def __init__(self, window, timeLine):
+    def __init__(self, graphicalInterface, timeLine):
         self.timeLine = timeLine
-        canvas = Canvas(window)
+        self.graphicalInterface = graphicalInterface
+        canvas = Canvas(self.graphicalInterface.window)
         canvas.pack(side='left', fill='both', expand=True)
 
         # создаем фрейм на канвасе
@@ -15,7 +16,7 @@ class TimeLineGraphicalFrame:
         canvas.create_window((0, 0), window=self.frame, anchor='nw')
 
         # настраиваем скроллбар
-        scrollbar = Scrollbar(window, orient='horizontal',
+        scrollbar = Scrollbar(self.graphicalInterface.window, orient='horizontal',
                               command=canvas.xview)
         scrollbar.place(relx=0, rely=1, relwidth=1, anchor='sw')
         canvas.configure(xscrollcommand=scrollbar.set)
@@ -28,6 +29,9 @@ class TimeLineGraphicalFrame:
     def update(self):
         for child in self.frame.winfo_children():
             child.destroy()
+
+        if self.timeLine.count == 0:
+            return
 
         current = self.timeLine.head
         if current == self.timeLine.tail:
