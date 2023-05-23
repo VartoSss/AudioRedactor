@@ -11,7 +11,6 @@ class TimeLineGraphicalFrame:
 
         # создаем фрейм на канвасе
         self.frame = Frame(canvas, bd=2)
-        self.frame.configure(bg="#B4FFF6")
         self.frame.pack(side='left', fill='both', expand=True)
         canvas.create_window((0, 0), window=self.frame, anchor='nw')
 

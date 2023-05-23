@@ -126,7 +126,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Fade in",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.open_fade_in_dialog()
         )
         self.fade_in_button.grid(row=0, column=2, sticky=NSEW, padx=5, pady=5)
 
@@ -134,7 +135,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Fade out",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.open_fade_out_dialog()
         )
         self.fade_out_button.grid(row=1, column=2, sticky=NSEW, padx=5, pady=5)
 
@@ -142,7 +144,7 @@ class GraphicalInterface:
             self.functions_frame,
             text="Удалить фрагмент",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
         )
         self.remove_button.grid(row=2, column=2, sticky=NSEW, padx=5, pady=5)
 
@@ -182,10 +184,81 @@ class GraphicalInterface:
                 "На таймлайне пусто, нельзя экспортировать")
             return
         file_path = filedialog.asksaveasfilename(defaultextension=".mp3")
-        self.timeLine.export(file_path, ".mp3")
+        self.timeLine.export(file_path, "mp3")
+
+    # fade in button
+
+    def handle_fade_in_button(self, dialog_window, time_seconds):
+        if not time_seconds.isdigit():
+            self.create_warning_window(
+                "Время должно быть неотрицательным числом")
+            return
+
+        self.timeLine.fade_in(self.current_fragment_id,
+                              int(time_seconds) * 1000)
+        dialog_window.destroy()
+
+    def open_fade_in_dialog(self):
+        dialog = Toplevel()
+        dialog.grab_set()
+        dialog.geometry("400x100")
+
+        # Создание метки с сообщением
+        message_label = Label(
+            dialog, text="Введить время fade in в секундах: ")
+        message_label.grid(row=0, column=0, padx=10, pady=10)
+
+        # Создание поля ввода
+        input_entry = Entry(dialog)
+        input_entry.grid(row=0, column=1, padx=10, pady=10)
+
+        # Создание кнопки "Применить"
+        apply_button = Button(dialog, text="Применить", command=lambda: self.handle_fade_in_button(
+            dialog, input_entry.get()))
+        apply_button.grid(row=1, column=0, padx=10, pady=10)
+
+        # Создание кнопки "Отмена"
+        cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
+        cancel_button.grid(row=1, column=1, padx=10, pady=10)
+
+    # ----------------------------------------------------
+
+    # fade out
+    def handle_fade_out_button(self, dialog_window, time_seconds):
+        if not time_seconds.isdigit():
+            self.create_warning_window(
+                "Время должно быть неотрицательным числом")
+            return
+
+        self.timeLine.fade_out(self.current_fragment_id,
+                               int(time_seconds) * 1000)
+        dialog_window.destroy()
+
+    def open_fade_out_dialog(self):
+        dialog = Toplevel()
+        dialog.grab_set()
+        dialog.geometry("400x100")
+
+        # Создание метки с сообщением
+        message_label = Label(
+            dialog, text="Введить время fade out в секундах: ")
+        message_label.grid(row=0, column=0, padx=10, pady=10)
+
+        # Создание поля ввода
+        input_entry = Entry(dialog)
+        input_entry.grid(row=0, column=1, padx=10, pady=10)
+
+        # Создание кнопки "Применить"
+        apply_button = Button(dialog, text="Применить", command=lambda: self.handle_fade_in_button(
+            dialog, input_entry.get()))
+        apply_button.grid(row=1, column=0, padx=10, pady=10)
+
+        # Создание кнопки "Отмена"
+        cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
+        cancel_button.grid(row=1, column=1, padx=10, pady=10)
 
     def track_button_clicked(self, fragment_id):
-        pass
+        self.current_fragment_id = fragment_id
 
     def create_warning_window(self, warning_text):
         messagebox.showerror("Кое-что пошло не так", warning_text)
