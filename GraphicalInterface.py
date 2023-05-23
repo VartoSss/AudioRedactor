@@ -94,7 +94,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Развернуть",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.handle_reverse_button()
         )
         self.reverse_button.grid(row=2, column=0, sticky=NSEW, padx=5, pady=5)
 
@@ -256,6 +257,13 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=10, pady=10)
+
+    # -----------------------------------------------------
+    # reverse
+
+    def handle_reverse_button(self):
+        self.timeLine.reverse(self.current_fragment_id)
+        messagebox.showinfo("Успешно", "Фрагмент успешно развернут")
 
     def track_button_clicked(self, fragment_id):
         self.current_fragment_id = fragment_id
