@@ -3,17 +3,15 @@ from tkinter import *
 
 class ButtonTimeLine:
     def on_click(self):
-        print("SUKA BLYAT")
-        self.timeLineFrame.graphicalInterface.fade_in_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.fade_out_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.change_speed_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.change_volume_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.crop_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.slice_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.cuncat_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.remove_button['state'] = 'normal'
-        self.timeLineFrame.graphicalInterface.reverse_button['state'] = 'normal'
-        print("Меня нажали")
+            self.timeLineFrame.graphicalInterface.fade_in_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.fade_out_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.change_speed_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.change_volume_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.crop_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.slice_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.cuncat_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.remove_button['state'] = 'normal'
+            self.timeLineFrame.graphicalInterface.reverse_button['state'] = 'normal'
 
     def __init__(self, timeLineFrame, fragment):
         self.timeLineFrame = timeLineFrame
@@ -34,3 +32,4 @@ class ButtonTimeLine:
             command=self.on_click
         )
         button.pack(side='left')
+

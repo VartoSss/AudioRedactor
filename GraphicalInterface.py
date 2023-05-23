@@ -184,6 +184,9 @@ class GraphicalInterface:
         file_path = filedialog.asksaveasfilename(defaultextension=".mp3")
         self.timeLine.export(file_path, ".mp3")
 
+    def track_button_clicked(self, fragment_id):
+        pass
+
     def create_warning_window(self, warning_text):
         messagebox.showerror("Кое-что пошло не так", warning_text)
 
