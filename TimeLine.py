@@ -10,6 +10,7 @@ from RemoveCommand import RemoveCommand
 from CropCommand import CropCommand
 from SliceCommand import SliceCommand
 from ReverseCommand import ReverseCommand
+from CuncatCommand import CuncatWithNextCommand
 
 
 class TimeLine:
@@ -64,14 +65,6 @@ class TimeLine:
             current_node = current_node.next
         return current_node
 
-    def cuncat_audio_with_next_by_id(self, id):
-        node = self.get_node_by_id(id)
-        if node.next is None:
-            raise TypeError("This track doesn't have a track after him")
-        next = node.next
-        node.cuncat_with(next)
-        self.remove_node(next)
-
     def export(self, path_with_name: str, format_file: str):
         if (self.count == 0):
             raise TypeError("There is nothing on timeLine now")
@@ -81,6 +74,13 @@ class TimeLine:
             current_segment = current_segment.next
             final_segment_value += current_segment.value
         final_segment_value.export(path_with_name, format_file)
+
+    def cuncat_audio_with_next(self, id):
+        cuncat_with_next_command = CuncatWithNextCommand(self, id)
+        fragment = self.get_node_by_id(id)
+        if fragment.next is not None:
+            self.command_stack.append(cuncat_with_next_command)
+            cuncat_with_next_command.execute()
 
     def change_speed(self, id: int, speed_multiplier: float):
         change_speed_command = ChangeSpeedComand(self, id, speed_multiplier)

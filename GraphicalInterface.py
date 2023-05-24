@@ -115,7 +115,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Разрезать",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.handle_slice_button()
         )
         self.slice_button.grid(row=1, column=1, sticky=NSEW, padx=5, pady=5)
 
@@ -123,7 +124,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Обьеденить с следующим",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.handle_cuncat_button()
         )
         self.cuncat_button.grid(row=2, column=1, sticky=NSEW, padx=5, pady=5)
 
@@ -167,8 +169,6 @@ class GraphicalInterface:
             return
         self.timeLine.undo()
         self.timeLineGraphics.update()
-        self.turn_off_functions_button()
-        self.end_work_fragment_actions()
 
     def save_command(self):
         print("This button doesn't work yet")
@@ -420,6 +420,71 @@ class GraphicalInterface:
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=2, column=1, columnspan=2, padx=3, pady=3)
         self.end_work_fragment_actions()
+
+    # -----------------------------------------------------------------------
+    # slice
+    def apply_slice_button(self, dialog, time_seconds):
+        if match(r"^[0-9]*\.?[0-9]$", time_seconds) is None:
+            self.create_warning_window(
+                "Время разреза должно быть неотрицательным вещественным числом")
+            return
+        current_fragment = self.timeLine.get_value_by_id(
+            self.current_fragment_id)
+        current_fragment_len = current_fragment.duration_seconds
+
+        if float(time_seconds) > current_fragment_len:
+            self.create_warning_window(
+                "Время разреза не должно превышать протяженность фрагмента")
+            return
+
+        self.timeLine.slice(self.current_fragment_id,
+                            float(time_seconds) * 1000)
+        dialog.destroy()
+        self.end_work_fragment_actions()
+        self.timeLineGraphics.update()
+
+    def handle_slice_button(self):
+        dialog = Toplevel()
+        dialog.grab_set()
+        dialog.geometry("500x150")
+
+        current_fragment = self.timeLine.get_value_by_id(
+            self.current_fragment_id)
+        current_fragment_len = f"{float(current_fragment.duration_seconds):.2f}"
+
+        # Создание метки с сообщением
+        message_label = Label(
+            dialog, text=f"Введите время в секундах, \n \
+                на котором нужно разрезать фрагмент \n \
+                протяженность фрагмента: {current_fragment_len} секунд")
+        message_label.grid(row=0, column=0, padx=10, pady=10)
+
+        # Создание поля ввода
+        input_entry = Entry(dialog)
+        input_entry.grid(row=0, column=1, padx=10, pady=10)
+
+        # Создание кнопки "Применить"
+        apply_button = Button(dialog, text="Применить", command=lambda: self.apply_slice_button(
+            dialog, input_entry.get()))
+        apply_button.grid(row=1, column=0, padx=10, pady=10)
+
+        # Создание кнопки "Отмена"
+        cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
+        cancel_button.grid(row=1, column=1, padx=10, pady=10)
+        self.end_work_fragment_actions()
+
+    # -------------------------------------------------------------------------
+    # cuncat
+
+    def handle_cuncat_button(self):
+        try:
+            self.timeLine.cuncat_audio_with_next(
+                self.current_fragment_id)
+            messagebox.showinfo(
+                "Успешно", "фрагмент успешно обьединен со следующим")
+        except TypeError:
+            self.create_warning_window("За этим фрагментом ничего нет")
+        self.timeLineGraphics.update()
 
     def track_button_clicked(self, button_time_line):
         self.current_fragment_id = button_time_line.fragment.id
