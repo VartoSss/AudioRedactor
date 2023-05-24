@@ -1,6 +1,7 @@
 from CommandInterface import CommandInterface
 from Fragment import Fragment
 
+
 class RemoveCommand(CommandInterface):
     def __init__(self, timeline, id: int):
         self.timeline = timeline
@@ -8,10 +9,9 @@ class RemoveCommand(CommandInterface):
         self.previous_id = None
 
     def execute(self):
-        fragment = self.timeline.get_node_by_id(self.id)
-        self.fragment = fragment
-        if fragment.previous is not None:
-            self.previous_id = fragment.previous.id
+        self.fragment = self.timeline.get_node_by_id(self.id)
+        if self.fragment.previous is not None:
+            self.previous_id = self.fragment.previous.id
         self.timeline.remove_node_by_id(self.id)
 
     def undo(self):
@@ -25,13 +25,13 @@ class RemoveCommand(CommandInterface):
             self.timeline.head.previous = self.fragment
             self.timeline.head = self.timeline.head.previous
             return
-        
+
         previous_fragment = self.timeline.get_node_by_id(self.previous_id)
         if previous_fragment.next is None:
             previous_fragment.next = self.fragment
             self.fragment.previous = self.timeline.tail
             self.timeline.tail = self.timeline.tail.next
-        
+
         else:
             next_fragment = previous_fragment.next
             next_fragment.previous = self.fragment

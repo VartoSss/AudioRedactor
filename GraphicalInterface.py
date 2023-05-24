@@ -4,6 +4,7 @@ from tkinter import messagebox
 from TimeLine import TimeLine
 from TimeLineGraphicalFrame import TimeLineGraphicalFrame
 from Fragment import Fragment
+from re import match, compile
 
 
 class GraphicalInterface:
@@ -77,7 +78,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Изменить скорость",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.handle_change_speed_button()
         )
         self.change_speed_button.grid(
             row=0, column=0, sticky=NSEW, padx=5, pady=5)
@@ -85,7 +87,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Изменить громкость",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.handle_change_volume_button()
         )
         self.change_volume_button.grid(
             row=1, column=0, sticky=NSEW, padx=5, pady=5)
@@ -103,7 +106,8 @@ class GraphicalInterface:
             self.functions_frame,
             text="Обрезать",
             font=self.hat_font,
-            state='disabled'
+            state='disabled',
+            command=lambda: self.handle_crop_button()
         )
         self.crop_button.grid(row=0, column=1, sticky=NSEW, padx=5, pady=5)
 
@@ -128,7 +132,7 @@ class GraphicalInterface:
             text="Fade in",
             font=self.hat_font,
             state='disabled',
-            command=lambda: self.open_fade_in_dialog()
+            command=lambda: self.handle_fade_in_dialog()
         )
         self.fade_in_button.grid(row=0, column=2, sticky=NSEW, padx=5, pady=5)
 
@@ -137,7 +141,7 @@ class GraphicalInterface:
             text="Fade out",
             font=self.hat_font,
             state='disabled',
-            command=lambda: self.open_fade_out_dialog()
+            command=lambda: self.handle_fade_out_dialog()
         )
         self.fade_out_button.grid(row=1, column=2, sticky=NSEW, padx=5, pady=5)
 
@@ -146,6 +150,7 @@ class GraphicalInterface:
             text="Удалить фрагмент",
             font=self.hat_font,
             state='disabled',
+            command=lambda: self.handle_remove_button()
         )
         self.remove_button.grid(row=2, column=2, sticky=NSEW, padx=5, pady=5)
 
@@ -156,12 +161,14 @@ class GraphicalInterface:
         pass
 
     def undo_command(self):
-        if self.timeLine.count == 0:
+        if len(self.timeLine.command_stack) == 0:
             self.create_warning_window(
                 "Пока не происходило никаких действий, отменять нечего")
             return
         self.timeLine.undo()
         self.timeLineGraphics.update()
+        self.turn_off_functions_button()
+        self.end_work_fragment_actions()
 
     def save_command(self):
         print("This button doesn't work yet")
@@ -189,7 +196,7 @@ class GraphicalInterface:
 
     # fade in button
 
-    def handle_fade_in_button(self, dialog_window, time_seconds):
+    def apply_fade_in_button(self, dialog_window, time_seconds):
         if not time_seconds.isdigit():
             self.create_warning_window(
                 "Время должно быть неотрицательным числом")
@@ -199,7 +206,7 @@ class GraphicalInterface:
                               int(time_seconds) * 1000)
         dialog_window.destroy()
 
-    def open_fade_in_dialog(self):
+    def handle_fade_in_dialog(self):
         dialog = Toplevel()
         dialog.grab_set()
         dialog.geometry("400x100")
@@ -214,18 +221,18 @@ class GraphicalInterface:
         input_entry.grid(row=0, column=1, padx=10, pady=10)
 
         # Создание кнопки "Применить"
-        apply_button = Button(dialog, text="Применить", command=lambda: self.handle_fade_in_button(
+        apply_button = Button(dialog, text="Применить", command=lambda: self.apply_fade_in_button(
             dialog, input_entry.get()))
         apply_button.grid(row=1, column=0, padx=10, pady=10)
 
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=10, pady=10)
+        self.end_work_fragment_actions()
 
     # ----------------------------------------------------
-
     # fade out
-    def handle_fade_out_button(self, dialog_window, time_seconds):
+    def apply_fady_out_change(self, dialog_window, time_seconds):
         if not time_seconds.isdigit():
             self.create_warning_window(
                 "Время должно быть неотрицательным числом")
@@ -234,8 +241,9 @@ class GraphicalInterface:
         self.timeLine.fade_out(self.current_fragment_id,
                                int(time_seconds) * 1000)
         dialog_window.destroy()
+        self.end_work_fragment_actions()
 
-    def open_fade_out_dialog(self):
+    def handle_fade_out_dialog(self):
         dialog = Toplevel()
         dialog.grab_set()
         dialog.geometry("400x100")
@@ -250,23 +258,205 @@ class GraphicalInterface:
         input_entry.grid(row=0, column=1, padx=10, pady=10)
 
         # Создание кнопки "Применить"
-        apply_button = Button(dialog, text="Применить", command=lambda: self.handle_fade_in_button(
+        apply_button = Button(dialog, text="Применить", command=lambda: self.apply_fade_in_button(
             dialog, input_entry.get()))
         apply_button.grid(row=1, column=0, padx=10, pady=10)
 
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=10, pady=10)
+        self.end_work_fragment_actions()
 
     # -----------------------------------------------------
     # reverse
 
     def handle_reverse_button(self):
         self.timeLine.reverse(self.current_fragment_id)
-        messagebox.showinfo("Успешно", "Фрагмент успешно развернут")
+        messagebox.showinfo("Успешно", "Фрагмент успешно развёрнут")
+        self.end_work_fragment_actions()
 
-    def track_button_clicked(self, fragment_id):
-        self.current_fragment_id = fragment_id
+    # -------------------------------------------------------
+    # remove
+
+    def handle_remove_button(self):
+        self.timeLine.remove(self.current_fragment_id)
+        self.timeLineGraphics.update()
+        messagebox.showinfo("Успешно", "Фрагмент успешно удален")
+
+    # ------------------------------------------------------
+    # change speed
+    def apply_change_speed_change(self, dialog_window, speed_multiplier):
+        if match(r"^[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$", speed_multiplier) is None:
+            self.create_warning_window(
+                "Мультипликатор должен быть вещественным неотрицательным числом")
+            return
+
+        self.timeLine.change_speed(
+            self.current_fragment_id, float(speed_multiplier))
+        dialog_window.destroy()
+        self.end_work_fragment_actions()
+
+    def handle_change_speed_button(self):
+        dialog = Toplevel()
+        dialog.grab_set()
+        dialog.geometry("600x150")
+
+        # Создание метки с сообщением
+        message_label = Label(
+            dialog, text="Введите мультипликатор увеличения скорости \n \
+            Для замедления введите вещественной число < 1 \n \
+            Для ускорения введите число с плавающей точкой > 1 \n \
+            Число вводить через точку")
+        message_label.grid(row=0, column=0, padx=3, pady=3)
+
+        # Создание поля ввода
+        input_entry = Entry(dialog)
+        input_entry.grid(row=0, column=1, padx=3, pady=3)
+
+        # Создание кнопки "Применить"
+        apply_button = Button(dialog, text="Применить", command=lambda: self.apply_change_speed_change(
+            dialog, input_entry.get()))
+        apply_button.grid(row=1, column=0, padx=3, pady=3)
+
+        # Создание кнопки "Отмена"
+        cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
+        cancel_button.grid(row=1, column=1, padx=3, pady=3)
+        self.end_work_fragment_actions()
+
+    # -------------------------------------------------------------------------
+    # change volume
+    def apply_change_volume_change(self, dialog_window, volume_delta_decibels):
+        if not volume_delta_decibels.isdigit():
+            self.create_warning_window(
+                "Значение должно быть целым числом")
+            return
+
+        self.timeLine.change_volume(
+            self.current_fragment_id, int(volume_delta_decibels))
+        dialog_window.destroy()
+        self.end_work_fragment_actions()
+
+    def handle_change_volume_button(self):
+        dialog = Toplevel()
+        dialog.grab_set()
+        dialog.geometry("600x150")
+
+        # Создание метки с сообщением
+        message_label = Label(
+            dialog, text="Введите на сколько децибелл вы хотите изменить громкость\n \
+            Для увеличения громкости введите целое число > 0 \n \
+            Для уменьшения громкости введите целое число < 0")
+        message_label.grid(row=0, column=0, padx=3, pady=3)
+
+        # Создание поля ввода
+        input_entry = Entry(dialog)
+        input_entry.grid(row=0, column=1, padx=3, pady=3)
+
+        # Создание кнопки "Применить"
+        apply_button = Button(dialog, text="Применить", command=lambda: self.apply_change_volume_change(
+            dialog, input_entry.get()))
+        apply_button.grid(row=1, column=0, padx=3, pady=3)
+
+        # Создание кнопки "Отмена"
+        cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
+        cancel_button.grid(row=1, column=1, padx=3, pady=3)
+        self.end_work_fragment_actions()
+
+    # -------------------------------------------------------------------------------
+    # crop button
+
+    def apply_crop(self, dialog_window, from_value_seconds, to_value_seconds):
+        if match(r"^[0-9]*\.?[0-9]$", from_value_seconds) is None \
+                or match(r"^[0-9]*\.?[0-9]$", to_value_seconds) is None:
+            self.create_warning_window(
+                "Правая и левая граница должны быть неотрицательнымы вещественными числами")
+            return
+
+        fragment = self.timeLine.get_value_by_id(self.current_fragment_id)
+        fragment_duration_seconds = float(fragment.duration_seconds)
+
+        if float(from_value_seconds) > float(to_value_seconds) \
+                or float(from_value_seconds) > fragment_duration_seconds \
+                or float(to_value_seconds) > fragment_duration_seconds:
+            self.create_warning_window(
+                "Правая и левая граница не должны быть больше времени фрагмента")
+            return
+
+        self.timeLine.crop(self.current_fragment_id, float(
+            from_value_seconds) * 1000, float(to_value_seconds) * 1000)
+        dialog_window.destroy()
+        self.end_work_fragment_actions()
+
+    def handle_crop_button(self):
+        dialog = Toplevel()
+        dialog.grab_set()
+        dialog.geometry("600x150")
+
+        fragment = self.timeLine.get_value_by_id(self.current_fragment_id)
+        fragment_duration_seconds = f"{float(fragment.duration_seconds):.2f}"
+
+        message_label = Label(
+            dialog, text=f"Введите начало и конец отрезка в секундах:\n \
+            Текущая длина трека: {fragment_duration_seconds} секунд")
+        message_label.grid(row=0, column=1, padx=3, pady=3)
+
+        duration_from_label = Label(dialog, text="Левая граница:")
+        duration_from_label.grid(row=1, column=0, padx=5, pady=10)
+
+        duration_from_entry = Entry(dialog)
+        duration_from_entry.grid(row=1, column=1, padx=10, pady=10)
+
+        duration_to_label = Label(dialog, text="Правая граница:")
+        duration_to_label.grid(row=1, column=2, padx=5, pady=10)
+
+        duration_to_entry = Entry(dialog)
+        duration_to_entry.grid(row=1, column=3, padx=10, pady=10)
+
+        apply_button = Button(dialog, text="Применить", command=lambda: self.apply_crop(
+            dialog, duration_from_entry.get(), duration_to_entry.get()))
+        apply_button.grid(row=2, column=0, columnspan=2, padx=3, pady=3)
+
+        # Создание кнопки "Отмена"
+        cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
+        cancel_button.grid(row=2, column=1, columnspan=2, padx=3, pady=3)
+        self.end_work_fragment_actions()
+
+    def track_button_clicked(self, button_time_line):
+        self.current_fragment_id = button_time_line.fragment.id
+        self.current_fragment_button = button_time_line.button
+        self.current_fragment_button.configure(bg="#00D1FF")
+        self.turn_on_functions_button()
+
+    def set_fragment_button_color_to_default(self):
+        self.current_fragment_button.configure(bg="#72FEFE")
+
+    def end_work_fragment_actions(self):
+        self.turn_off_functions_button()
+        if self.current_fragment_button is not None:
+            self.set_fragment_button_color_to_default()
+        self.current_fragment_button = None
+
+    def turn_on_functions_button(self):
+        self.fade_in_button['state'] = 'normal'
+        self.fade_out_button['state'] = 'normal'
+        self.change_speed_button['state'] = 'normal'
+        self.change_volume_button['state'] = 'normal'
+        self.crop_button['state'] = 'normal'
+        self.slice_button['state'] = 'normal'
+        self.cuncat_button['state'] = 'normal'
+        self.remove_button['state'] = 'normal'
+        self.reverse_button['state'] = 'normal'
+
+    def turn_off_functions_button(self):
+        self.fade_in_button['state'] = 'disabled'
+        self.fade_out_button['state'] = 'disabled'
+        self.change_speed_button['state'] = 'disabled'
+        self.change_volume_button['state'] = 'disabled'
+        self.crop_button['state'] = 'disabled'
+        self.slice_button['state'] = 'disabled'
+        self.cuncat_button['state'] = 'disabled'
+        self.remove_button['state'] = 'disabled'
+        self.reverse_button['state'] = 'disabled'
 
     def create_warning_window(self, warning_text):
         messagebox.showerror("Кое-что пошло не так", warning_text)
