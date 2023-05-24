@@ -10,8 +10,6 @@ class CuncatWithNextCommand(CommandInterface):
 
     def execute(self):
         self.fragment = self.timeLine.get_node_by_id(self.id)
-        if self.fragment.next is None:
-            raise TypeError("This track doesn't have a track after him")
         self.next = self.fragment.next
         self.copied_next_fragment = deepcopy(self.fragment.next)
         self.copied_current_AudioSegment = deepcopy(self.fragment.value)

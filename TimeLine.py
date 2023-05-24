@@ -81,6 +81,8 @@ class TimeLine:
         if fragment.next is not None:
             self.command_stack.append(cuncat_with_next_command)
             cuncat_with_next_command.execute()
+        else:
+            raise TypeError("There is nothing after that track")
 
     def change_speed(self, id: int, speed_multiplier: float):
         change_speed_command = ChangeSpeedComand(self, id, speed_multiplier)

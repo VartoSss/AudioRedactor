@@ -10,6 +10,7 @@ from re import match, compile
 class GraphicalInterface:
     def __init__(self):
         self.timeLine = TimeLine()
+        self.current_fragment_button = None
         self.window = Tk()
         self.window.title("VartAudio")
         self.window.geometry("600x450")
@@ -122,7 +123,7 @@ class GraphicalInterface:
 
         self.cuncat_button = Button(
             self.functions_frame,
-            text="Обьеденить с следующим",
+            text="Обьединить с следующим",
             font=self.hat_font,
             state='disabled',
             command=lambda: self.handle_cuncat_button()
@@ -169,6 +170,7 @@ class GraphicalInterface:
             return
         self.timeLine.undo()
         self.timeLineGraphics.update()
+        self.end_work_fragment_actions()
 
     def save_command(self):
         print("This button doesn't work yet")
@@ -185,6 +187,7 @@ class GraphicalInterface:
         new_fragment = Fragment(path_to_audio)
         self.timeLine.add(new_fragment)
         self.timeLineGraphics.update()
+        self.end_work_fragment_actions()
 
     def export_command(self):
         if self.timeLine.count == 0:
@@ -193,7 +196,8 @@ class GraphicalInterface:
             return
         file_path = filedialog.asksaveasfilename(defaultextension=".mp3")
         self.timeLine.export(file_path, "mp3")
-
+        self.end_work_fragment_actions()
+    # --------------------------------------------------------------------------
     # fade in button
 
     def apply_fade_in_button(self, dialog_window, time_seconds):
@@ -205,6 +209,7 @@ class GraphicalInterface:
         self.timeLine.fade_in(self.current_fragment_id,
                               int(time_seconds) * 1000)
         dialog_window.destroy()
+        self.end_work_fragment_actions()
 
     def handle_fade_in_dialog(self):
         dialog = Toplevel()
@@ -282,6 +287,7 @@ class GraphicalInterface:
         self.timeLine.remove(self.current_fragment_id)
         self.timeLineGraphics.update()
         messagebox.showinfo("Успешно", "Фрагмент успешно удален")
+        self.end_work_fragment_actions()
 
     # ------------------------------------------------------
     # change speed
@@ -440,8 +446,8 @@ class GraphicalInterface:
         self.timeLine.slice(self.current_fragment_id,
                             float(time_seconds) * 1000)
         dialog.destroy()
-        self.end_work_fragment_actions()
         self.timeLineGraphics.update()
+        self.end_work_fragment_actions()
 
     def handle_slice_button(self):
         dialog = Toplevel()
@@ -485,6 +491,7 @@ class GraphicalInterface:
         except TypeError:
             self.create_warning_window("За этим фрагментом ничего нет")
         self.timeLineGraphics.update()
+        self.end_work_fragment_actions()
 
     def track_button_clicked(self, button_time_line):
         self.current_fragment_id = button_time_line.fragment.id
@@ -499,6 +506,10 @@ class GraphicalInterface:
         self.turn_off_functions_button()
         if self.current_fragment_button is not None:
             self.set_fragment_button_color_to_default()
+        self.current_fragment_button = None
+
+    def end_work_fragment_actions1(self):
+        self.timeLineGraphics.update()
         self.current_fragment_button = None
 
     def turn_on_functions_button(self):
