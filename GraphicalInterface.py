@@ -30,7 +30,8 @@ class GraphicalInterface:
             fg="white",
             font=self.hat_font,
             padx=10,
-            bg="#938CDD"
+            bg="#938CDD",
+            command=lambda: self.undo_command_handler()
         )
         self.save_button = Button(
             self.hat_frame,
@@ -49,7 +50,8 @@ class GraphicalInterface:
             fg="white",
             font=self.hat_font,
             padx=10,
-            bg="#938CDD"
+            bg="#938CDD",
+            command=lambda: self.export_command_handler()
         )
         self.add_button = Button(
             self.hat_frame,
@@ -58,7 +60,8 @@ class GraphicalInterface:
             fg="white",
             font=self.hat_font,
             padx=10,
-            bg="#938CDD"
+            bg="#938CDD",
+            command=lambda: self.add_command_handler()
         )
         self.save_button.pack(side=LEFT)
         self.export_button.pack(side=LEFT)
@@ -164,7 +167,7 @@ class GraphicalInterface:
 
         pass
 
-    def undo_command(self):
+    def undo_command_handler(self):
         if len(self.timeLine.command_stack) == 0:
             self.create_warning_window(
                 "Пока не происходило никаких действий, отменять нечего")
@@ -174,9 +177,9 @@ class GraphicalInterface:
         self.end_work_fragment_actions1()
 
     def save_command(self):
-        print("This button doesn't work yet")
+        pass
 
-    def add_command(self):
+    def add_command_handler(self):
         path_to_audio = filedialog.askopenfilename()
         if path_to_audio == '':
             return
@@ -190,7 +193,7 @@ class GraphicalInterface:
         # self.timeLineGraphics.update()
         self.end_work_fragment_actions1()
 
-    def export_command(self):
+    def export_command_handler(self):
         if self.timeLine.count == 0:
             self.create_warning_window(
                 "На таймлайне пусто, нельзя экспортировать")
@@ -563,8 +566,4 @@ class GraphicalInterface:
         messagebox.showerror("Кое-что пошло не так", warning_text)
 
     def run(self):
-        self.undo_button['command'] = self.undo_command
-        self.save_button['command'] = self.save_command
-        self.add_button['command'] = self.add_command
-        self.export_button['command'] = self.export_command
         self.window.mainloop()
