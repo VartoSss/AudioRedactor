@@ -39,7 +39,8 @@ class GraphicalInterface:
             fg="white",
             font=self.hat_font,
             padx=10,
-            bg="#938CDD"
+            bg="#938CDD",
+            state="disabled"
         )
         self.export_button = Button(
             self.hat_frame,
