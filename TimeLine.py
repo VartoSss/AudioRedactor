@@ -8,9 +8,10 @@ from FadeInCommand import FadeInCommand
 from AddCommand import AddCommand
 from RemoveCommand import RemoveCommand
 from CropCommand import CropCommand
-from SliceCommand import SliceCommand
 from ReverseCommand import ReverseCommand
 from CuncatCommand import CuncatWithNextCommand
+from ReplayCommand import ReplayCommand
+from SliceCommand import SliceCommand
 
 
 class TimeLine:
@@ -115,15 +116,20 @@ class TimeLine:
         self.command_stack.append(crop_command)
         crop_command.execute()
 
+    def reverse(self, id):
+        reverse_command = ReverseCommand(self, id)
+        self.command_stack.append(reverse_command)
+        reverse_command.execute()
+
     def slice(self, id, where_to_cut_miliseconds):
         slice_command = SliceCommand(self, id, where_to_cut_miliseconds)
         self.command_stack.append(slice_command)
         slice_command.execute()
 
-    def reverse(self, id):
-        reverse_command = ReverseCommand(self, id)
-        self.command_stack.append(reverse_command)
-        reverse_command.execute()
+    def replay(self, id, how_many_times_replay):
+        replay_command = ReplayCommand(self, id, how_many_times_replay)
+        self.command_stack.append(replay_command)
+        replay_command.execute()
 
     def undo(self):
         command = self.command_stack.pop()

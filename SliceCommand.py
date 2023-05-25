@@ -1,6 +1,7 @@
 from CommandInterface import CommandInterface
 from Fragment import Fragment
 
+
 class SliceCommand(CommandInterface):
     def __init__(self, timeLine, id, where_to_cut_milisecconds):
         self.timeLine = timeLine
@@ -17,10 +18,10 @@ class SliceCommand(CommandInterface):
 
         value_before_cut = value[:self.where_to_cut_milisecconds]
         value_after_cut = value[self.where_to_cut_milisecconds:]
-        
+
         if self.previous is None and self.next is None:
             fragment_before_cut = Fragment(
-            path_to_audio, name, value_before_cut, None, None
+                path_to_audio, name, value_before_cut, None, None
             )
             self.timeLine.head = fragment_before_cut
             fragment_after_cut = Fragment(
@@ -36,7 +37,7 @@ class SliceCommand(CommandInterface):
                 path_to_audio, name, value_before_cut, self.previous, None
             )
             fragment_after_cut = Fragment(
-            path_to_audio, name, value_after_cut, fragment_before_cut, None
+                path_to_audio, name, value_after_cut, fragment_before_cut, None
             )
             self.timeLine.tail = fragment_after_cut
             fragment_before_cut.next = fragment_after_cut
@@ -47,26 +48,25 @@ class SliceCommand(CommandInterface):
                 path_to_audio, name, value_before_cut, None, None
             )
             fragment_after_cut = Fragment(
-            fragment_before_cut, name, value_after_cut, path_to_audio, self.next
+                fragment_before_cut, name, value_after_cut, path_to_audio, self.next
             )
             self.timeLine.head = fragment_before_cut
             fragment_before_cut.next = fragment_after_cut
             self.next.previous = fragment_after_cut
-               
+
         else:
             fragment_before_cut = Fragment(
                 path_to_audio, name, value_before_cut, self.previous, None
             )
             fragment_after_cut = Fragment(
-            path_to_audio, name, value_after_cut, fragment_before_cut, self.next
+                path_to_audio, name, value_after_cut, fragment_before_cut, self.next
             )
             self.previous.next = fragment_before_cut
             fragment_before_cut.next = fragment_after_cut
             self.next.previous = fragment_after_cut
-            
+
         self.id_fragment_before_cut = fragment_before_cut.id
         self.timeLine.count += 1
-
 
     def undo(self):
         if self.previous is None and self.next is None:
@@ -76,7 +76,7 @@ class SliceCommand(CommandInterface):
             self.next.previous = self.fragment
             self.fragment.next = self.next
             self.timeLine.head = self.fragment
-        
+
         elif self.next is None:
             self.previous.next = self.fragment
             self.timeLine.tail = self.fragment
@@ -86,6 +86,6 @@ class SliceCommand(CommandInterface):
             self.fragment.next = self.next
             self.fragment.previous = self.previous
             self.next.previous = self.fragment
-            self.previous.nexe = self.fragment
+            self.previous.next = self.fragment
 
         self.timeLine.count -= 1

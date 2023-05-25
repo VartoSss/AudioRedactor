@@ -18,7 +18,6 @@ class RemoveCommand(CommandInterface):
         self.timeline.count += 1
         if self.timeline.head is None:
             self.timeline.head = self.timeline.tail = self.fragment
-            self.timeline.count += 1
             return
 
         elif self.previous_id is None:

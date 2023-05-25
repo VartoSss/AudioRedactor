@@ -18,7 +18,7 @@ class Fragment:
         self.previous = None
         Fragment.__last_id += 1
 
-    def __init__(self, path_to_audio, name=None, value=None, previous=None, next=None):
+    def __init__(self, path_to_audio, name=None, value=None, id=None, previous=None, next=None):
         if name is None:
             self.path_to_audio = path_to_audio
             self.set_value_by_path(path_to_audio)
@@ -32,7 +32,9 @@ class Fragment:
             self.path_to_audio = path_to_audio
             self.previous = previous
             self.next = next
-            self.id = self.__last_id
+            if id is None:
+                self.id = self.__last_id
+            else: self.id = id
         Fragment.__last_id += 1
 
 
