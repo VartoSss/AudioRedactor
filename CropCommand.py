@@ -1,5 +1,4 @@
 from CommandInterface import CommandInterface
-from Fragment import Fragment
 
 class CropCommand(CommandInterface):
     def __init__(self, timeLine, id, from_miliseconds, to_miliseconds):
