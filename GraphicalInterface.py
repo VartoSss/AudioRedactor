@@ -522,13 +522,15 @@ class GraphicalInterface:
         self.end_work_fragment_actions1()
 
     def track_button_clicked(self, button_time_line):
+        self.set_fragment_button_color_to_default()
         self.current_fragment_id = button_time_line.fragment.id
         self.current_fragment_button = button_time_line.button
         self.current_fragment_button.configure(bg="#00D1FF")
         self.turn_on_functions_button()
 
     def set_fragment_button_color_to_default(self):
-        self.current_fragment_button.configure(bg="#72FEFE")
+        if self.current_fragment_button is not None:
+            self.current_fragment_button.configure(bg="#72FEFE")
 
     def end_work_fragment_actions(self):
         self.turn_off_functions_button()
