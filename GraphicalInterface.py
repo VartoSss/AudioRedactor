@@ -532,14 +532,9 @@ class GraphicalInterface:
         if self.current_fragment_button is not None:
             self.current_fragment_button.configure(bg="#72FEFE")
 
-    def end_work_fragment_actions(self):
-        self.turn_off_functions_button()
-        if self.current_fragment_button is not None:
-            self.set_fragment_button_color_to_default()
-        self.current_fragment_button = None
-
     def end_work_fragment_actions1(self):
         self.timeLineGraphics.update()
+        self.turn_off_functions_button()
         self.current_fragment_button = None
 
     def turn_on_functions_button(self):
