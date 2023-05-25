@@ -21,11 +21,11 @@ class SliceCommand(CommandInterface):
 
         if self.previous is None and self.next is None:
             fragment_before_cut = Fragment(
-                path_to_audio, name, value_before_cut, None, None
+                path_to_audio, name, value_before_cut, self.id, None, None
             )
             self.timeLine.head = fragment_before_cut
             fragment_after_cut = Fragment(
-                path_to_audio, name, value_after_cut,  fragment_before_cut, None
+                path_to_audio, name, value_after_cut, None, fragment_before_cut, None
             )
 
             self.timeLine.tail = fragment_after_cut
@@ -34,10 +34,10 @@ class SliceCommand(CommandInterface):
 
         elif self.next is None:
             fragment_before_cut = Fragment(
-                path_to_audio, name, value_before_cut, self.previous, None
+                path_to_audio, name, value_before_cut, self.id, self.previous, None
             )
             fragment_after_cut = Fragment(
-                path_to_audio, name, value_after_cut, fragment_before_cut, None
+                path_to_audio, name, value_after_cut, None, fragment_before_cut, None
             )
             self.timeLine.tail = fragment_after_cut
             fragment_before_cut.next = fragment_after_cut
@@ -45,10 +45,10 @@ class SliceCommand(CommandInterface):
 
         elif self.previous is None:
             fragment_before_cut = Fragment(
-                path_to_audio, name, value_before_cut, None, None
+                path_to_audio, name, value_before_cut, self.id, None, None
             )
             fragment_after_cut = Fragment(
-                fragment_before_cut, name, value_after_cut, path_to_audio, self.next
+                path_to_audio, name, value_after_cut, None, fragment_before_cut, self.next
             )
             self.timeLine.head = fragment_before_cut
             fragment_before_cut.next = fragment_after_cut
@@ -56,10 +56,10 @@ class SliceCommand(CommandInterface):
 
         else:
             fragment_before_cut = Fragment(
-                path_to_audio, name, value_before_cut, self.previous, None
+                path_to_audio, name, value_before_cut, self.id, self.previous, None
             )
             fragment_after_cut = Fragment(
-                path_to_audio, name, value_after_cut, fragment_before_cut, self.next
+                path_to_audio, name, value_after_cut, None, fragment_before_cut, self.next
             )
             self.previous.next = fragment_before_cut
             fragment_before_cut.next = fragment_after_cut
