@@ -4,7 +4,7 @@ from tkinter import messagebox
 from TimeLine import TimeLine
 from TimeLineGraphicalFrame import TimeLineGraphicalFrame
 from Fragment import Fragment
-from re import match, compile
+from re import match
 
 
 class GraphicalInterface:
@@ -173,8 +173,7 @@ class GraphicalInterface:
                 "Пока не происходило никаких действий, отменять нечего")
             return
         self.timeLine.undo()
-        # self.timeLineGraphics.update()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def save_command(self):
         pass
@@ -191,7 +190,7 @@ class GraphicalInterface:
         new_fragment = Fragment(path_to_audio)
         self.timeLine.add(new_fragment)
         # self.timeLineGraphics.update()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def export_command_handler(self):
         if self.timeLine.count == 0:
@@ -200,7 +199,7 @@ class GraphicalInterface:
             return
         file_path = filedialog.asksaveasfilename(defaultextension=".mp3")
         self.timeLine.export(file_path, "mp3")
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
     # --------------------------------------------------------------------------
     # fade in button
 
@@ -213,7 +212,7 @@ class GraphicalInterface:
         self.timeLine.fade_in(self.current_fragment_id,
                               int(time_seconds) * 1000)
         dialog_window.destroy()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def handle_fade_in_dialog(self):
         dialog = Toplevel()
@@ -237,7 +236,7 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=10, pady=10)
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # ----------------------------------------------------
     # fade out
@@ -250,7 +249,7 @@ class GraphicalInterface:
         self.timeLine.fade_out(self.current_fragment_id,
                                int(time_seconds) * 1000)
         dialog_window.destroy()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def handle_fade_out_dialog(self):
         dialog = Toplevel()
@@ -274,7 +273,7 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=10, pady=10)
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # -----------------------------------------------------
     # reverse
@@ -282,7 +281,7 @@ class GraphicalInterface:
     def handle_reverse_button(self):
         self.timeLine.reverse(self.current_fragment_id)
         messagebox.showinfo("Успешно", "Фрагмент успешно развёрнут")
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # -------------------------------------------------------
     # remove
@@ -291,7 +290,7 @@ class GraphicalInterface:
         self.timeLine.remove(self.current_fragment_id)
         self.timeLineGraphics.update()
         messagebox.showinfo("Успешно", "Фрагмент успешно удален")
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # ------------------------------------------------------
     # change speed
@@ -304,7 +303,7 @@ class GraphicalInterface:
         self.timeLine.change_speed(
             self.current_fragment_id, float(speed_multiplier))
         dialog_window.destroy()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def handle_change_speed_button(self):
         dialog = Toplevel()
@@ -331,7 +330,7 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=3, pady=3)
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # -------------------------------------------------------------------------
     # change volume
@@ -344,7 +343,7 @@ class GraphicalInterface:
         self.timeLine.change_volume(
             self.current_fragment_id, int(volume_delta_decibels))
         dialog_window.destroy()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def handle_change_volume_button(self):
         dialog = Toplevel()
@@ -370,7 +369,7 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=3, pady=3)
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # -------------------------------------------------------------------------------
     # crop button
@@ -395,7 +394,7 @@ class GraphicalInterface:
         self.timeLine.crop(self.current_fragment_id, float(
             from_value_seconds) * 1000, float(to_value_seconds) * 1000)
         dialog_window.destroy()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def handle_crop_button(self):
         dialog = Toplevel()
@@ -429,7 +428,7 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=2, column=1, columnspan=2, padx=3, pady=3)
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # -----------------------------------------------------------------------
     # slice
@@ -451,7 +450,7 @@ class GraphicalInterface:
                             float(time_seconds) * 1000)
         dialog.destroy()
         self.timeLineGraphics.update()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def handle_slice_button(self):
         dialog = Toplevel()
@@ -481,7 +480,7 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=10, pady=10)
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     # -------------------------------------------------------------------------
     # replay
@@ -495,7 +494,7 @@ class GraphicalInterface:
         self.timeLine.replay(self.current_fragment_id,
                              int(how_many_times_replay))
         dialog_window.destroy()
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def handle_replay_dialog(self):
         dialog = Toplevel()
@@ -519,7 +518,7 @@ class GraphicalInterface:
         # Создание кнопки "Отмена"
         cancel_button = Button(dialog, text="Отмена", command=dialog.destroy)
         cancel_button.grid(row=1, column=1, padx=10, pady=10)
-        self.end_work_fragment_actions1()
+        self.end_work_fragment_actions()
 
     def track_button_clicked(self, button_time_line):
         self.set_fragment_button_color_to_default()
@@ -532,7 +531,7 @@ class GraphicalInterface:
         if self.current_fragment_button is not None:
             self.current_fragment_button.configure(bg="#72FEFE")
 
-    def end_work_fragment_actions1(self):
+    def end_work_fragment_actions(self):
         self.timeLineGraphics.update()
         self.turn_off_functions_button()
         self.current_fragment_button = None
