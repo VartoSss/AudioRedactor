@@ -25,9 +25,9 @@ class Fragment:
             self.next = next
             if id is None:
                 self.id = self.__last_id
-            else: self.id = id
+            else:
+                self.id = id
         Fragment.__last_id += 1
-
 
     def set_value_by_path(self, path_to_audio: str):
         if (path_to_audio.endswith(".wav")):

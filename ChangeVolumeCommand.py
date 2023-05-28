@@ -1,5 +1,6 @@
 from CommandInterface import CommandInterface
 
+
 class ChangeVolumeComand(CommandInterface):
     def __init__(self, timeLine, id: int, volume_delta_decibels: float):
         self.timeLine = timeLine

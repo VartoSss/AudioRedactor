@@ -1,5 +1,6 @@
 from CommandInterface import CommandInterface
 
+
 class ReplayCommand(CommandInterface):
     def __init__(self, timeLine, id: int, times_to_replay: int):
         self.timeLine = timeLine

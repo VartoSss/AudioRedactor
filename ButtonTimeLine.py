@@ -24,5 +24,3 @@ class ButtonTimeLine:
             command=self.on_click
         )
         self.button.pack(side='left')
-
-    

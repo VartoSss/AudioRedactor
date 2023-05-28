@@ -1,5 +1,6 @@
 from CommandInterface import CommandInterface
 
+
 class ReverseCommand(CommandInterface):
     def __init__(self, timeLine, id: int):
         self.timeLine = timeLine
